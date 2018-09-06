@@ -89,7 +89,7 @@ public class KenKen {
     // checks condition and returns true only if it is true! 
     // ********************************************************** //
 
-    private static boolean check_condition(long num, String op,int result,Vector<Integer> indices)
+    private static boolean check_condition(String num, String op,int result,Vector<Integer> indices)
     {
 
     	//System.out.println(op.length());
@@ -98,20 +98,29 @@ public class KenKen {
     	{
     		System.out.println("Subtracting");
     	}
+
     	if (op.equals("Multiply"))
     	{
-    		System.out.println("Multiplying");
+    		System.out.println("Multiplying Values at indices : " + indices);
+    		int mult = 1;
+    		for(int i=0;i<indices.size();i++)
+    			mult *= Character.getNumericValue(num.charAt(indices.get(i)));       // we have the indices but need the number at these indices
+    		System.out.println(mult);
+    		if (mult == result) return true;
     	}
+
     	if (op.equals("Divide"))
     	{
     		System.out.println("Dividing");
     	}
+
     	if (op.equals("Add"))
     	{
-    		System.out.println("Adding");
+    		System.out.println("Adding Values at indices : " + indices);
     		int sum = 0;
     		for(int i=0;i<indices.size();i++)
-    			sum += (indices.get(i));       // we have the indices but need the number at these indices
+    			sum += Character.getNumericValue(num.charAt(indices.get(i)));       // we have the indices but need the number at these indices
+    		System.out.println(sum);
     		if (sum == result) return true;
     	}
 
@@ -135,6 +144,10 @@ public class KenKen {
 		if (size_kk == 4) limit = 4294967296L;
 		if (size_kk == 5) limit = 152587890625L;
 		
+		//**************** remove this!  Only for testing
+		//****************
+		//****************
+		limit = 100L;
 		// By now, I have read the input and saved the conditions.
 		for ( long j = 0; j < limit; j++)   //4^16 combinations. can be 5^16 as well; size_kk^16;
 		{
@@ -150,7 +163,8 @@ public class KenKen {
 			str_long = str_long.replace("2","3");
 			str_long = str_long.replace("1","2");
 			str_long = str_long.replace("0","1");
-			//System.out.println(str_long); // converts to base 4 but 0,1,2,3 need to add 1
+			System.out.println(str_long); // converts to base 4 but 0,1,2,3 need to add 1
+			boolean check = check_condition(str_long,String.valueOf(ops.get(2)),results.get(2),indices_vec.get(2));
 		}
 
 		// Write the required details in the output file
