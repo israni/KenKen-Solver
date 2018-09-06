@@ -5,13 +5,13 @@ public class KenKen {
 
     // ********************************************************** //
 	// readfile - reads input.txt and obtains relevant size of ken ken 
-	// and conditions 
+	// and adds conditions 
     // ********************************************************** //
 	static Vector ops = new Vector();
 	static Vector<Integer> results = new Vector<Integer>();
 	static Vector<Vector<Integer>> indices_vec = new Vector<Vector<Integer>>(); 
 
-    private static boolean readFile(File fin) throws IOException {
+    private static void readFile(File fin) throws IOException {
 	FileInputStream fis = new FileInputStream(fin);
  	BufferedReader br = new BufferedReader(new InputStreamReader(fis));
  	
@@ -49,17 +49,15 @@ public class KenKen {
 				//System.out.println(index);
 				indices.add(i-2,index);
 			}
-			System.out.println(op + " " + result + " " + indices);
-			//boolean check = check_condition(op,result,indices); // need to save conditions here, not check
-			//solved = solved && check;
+			//System.out.println(op + " " + result + " " + indices);
 			add_condition(op,result,indices);
-			indices.clear();
 		}
 		line_number++;
 	}
  
 	br.close();
-    return solved;
+	System.out.println("File reading complete!");
+	print_conditions();
     }
 
 
@@ -71,8 +69,19 @@ public class KenKen {
     	ops.add(op);
     	results.add(result);
     	indices_vec.add(indices);
+    	//System.out.println(indices);	
     }
 
+    private static void print_conditions()
+    {
+    	System.out.println(ops);
+    	System.out.println(results);
+    	for(int i=0;i<indices_vec.size();i++)
+    	{
+    		System.out.print(indices_vec.get(i));
+    	}
+    		
+    }
 
 
     // ********************************************************** //
@@ -112,27 +121,25 @@ public class KenKen {
     // everythings starts here - calls readline to read input.txt
     // ********************************************************** //
 
-    public static void main(String[] args) {
-	File dir = new File(".");
-	boolean problem_solved;
-	try{
-		File fin = new File(dir.getCanonicalPath()+File.separator +"input.txt");
-		problem_solved = readFile(fin);
-		System.out.println(problem_solved);	
-	}catch(IOException e) {
-		e.printStackTrace();
-	}
+    public static void main(String[] args) 
+    {
+		File dir = new File(".");
+		try{
+			File fin = new File(dir.getCanonicalPath()+File.separator +"input.txt");
+			readFile(fin);
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
 
-	// By now, I have read the input and saved the conditions.
-	for ( long j = 0; j < 4294967296L; j++)   //4^16 combinations. can be 5^16 as well;
-	{
-		//convert j to base 4/5
-		//check condition
-		// end if true
+		// By now, I have read the input and saved the conditions.
+		for ( long j = 0; j < 4294967296L; j++)   //4^16 combinations. can be 5^16 as well;
+		{
+			//convert j to base 4/5
+			//check condition
+			// end if true
 
-	}
+		}
 
-	// Write the required details in the output file
-    
+		// Write the required details in the output file
    }
 }
