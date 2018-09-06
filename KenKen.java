@@ -7,6 +7,9 @@ public class KenKen {
 	// readfile - reads input.txt and obtains relevant size of ken ken 
 	// and conditions 
     // ********************************************************** //
+	static Vector ops = new Vector();
+	static Vector<Integer> results = new Vector<Integer>();
+	static Vector<Vector<Integer>> indices_vec = new Vector<Vector<Integer>>(); 
 
     private static boolean readFile(File fin) throws IOException {
 	FileInputStream fis = new FileInputStream(fin);
@@ -26,7 +29,7 @@ public class KenKen {
 			System.out.println("Size of ken ken = " + size_kk);
 		}
 
-		// For each line other than the first line - condition
+		// For each line other than the first line - condition!
 		else{ 
 			String delims = "[ ]+";
 			String[] words = line.split(delims);
@@ -47,8 +50,9 @@ public class KenKen {
 				indices.add(i-2,index);
 			}
 			System.out.println(op + " " + result + " " + indices);
-			boolean check = check_condition(op,result,indices);
-			solved = solved && check;
+			//boolean check = check_condition(op,result,indices); // need to save conditions here, not check
+			//solved = solved && check;
+			add_condition(op,result,indices);
 			indices.clear();
 		}
 		line_number++;
@@ -58,6 +62,19 @@ public class KenKen {
     return solved;
     }
 
+
+	// ********************************************************** //
+    // saves conditions in vectors ops, results and vec<vec<indices>> 
+    // ********************************************************** //
+    private static void add_condition(String op,int result,Vector<Integer> indices)
+    {
+    	ops.add(op);
+    	results.add(result);
+    	indices_vec.add(indices);
+    }
+
+
+
     // ********************************************************** //
     // checks condition and returns true only if it is true! 
     // ********************************************************** //
@@ -65,7 +82,7 @@ public class KenKen {
     private static boolean check_condition(String op,int result,Vector<Integer> indices)
     {
 
-    	System.out.println(op.length());
+    	//System.out.println(op.length());
     	
     	if (op.equals("Subtract"))
     	{
@@ -106,6 +123,16 @@ public class KenKen {
 		e.printStackTrace();
 	}
 
+	// By now, I have read the input and saved the conditions.
+	for ( long j = 0; j < 4294967296L; j++)   //4^16 combinations. can be 5^16 as well;
+	{
+		//convert j to base 4/5
+		//check condition
+		// end if true
+
+	}
+
+	// Write the required details in the output file
     
    }
 }
