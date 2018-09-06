@@ -33,7 +33,7 @@ public class KenKen {
 			String op = words[0];
 			//System.out.println(op);
 			int result = Integer.valueOf(words[1]); 
-			Vector indices = new Vector();
+			Vector<Integer> indices = new Vector<Integer>();
 
 			// words contain index for conditions
 			for (int i = 2; i < words.length; i++)
@@ -62,7 +62,7 @@ public class KenKen {
     // checks condition and returns true only if it is true! 
     // ********************************************************** //
 
-    private static boolean check_condition(String op,int result,Vector indices)
+    private static boolean check_condition(String op,int result,Vector<Integer> indices)
     {
 
     	System.out.println(op.length());
@@ -82,6 +82,10 @@ public class KenKen {
     	if (op.equals("Add"))
     	{
     		System.out.println("Adding");
+    		int sum = 0;
+    		for(int i=0;i<indices.size();i++)
+    			sum += (indices.get(i));       // we have the indices but need the number at these indices
+    		if (sum == result) return true;
     	}
 
     	return false;
