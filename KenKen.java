@@ -10,6 +10,8 @@ public class KenKen {
 	static Vector ops = new Vector();
 	static Vector<Integer> results = new Vector<Integer>();
 	static Vector<Vector<Integer>> indices_vec = new Vector<Vector<Integer>>(); 
+	static int size_kk = 0;
+	static long limit;
 
     private static void readFile(File fin) throws IOException {
 	FileInputStream fis = new FileInputStream(fin);
@@ -17,7 +19,6 @@ public class KenKen {
  	
 	int line_number = 1;
 	String line = null;
-	int size_kk = 0;
 	boolean solved = false;
 
 	while ((line = br.readLine()) != null) {
@@ -88,7 +89,7 @@ public class KenKen {
     // checks condition and returns true only if it is true! 
     // ********************************************************** //
 
-    private static boolean check_condition(String op,int result,Vector<Integer> indices)
+    private static boolean check_condition(long num, String op,int result,Vector<Integer> indices)
     {
 
     	//System.out.println(op.length());
@@ -131,13 +132,25 @@ public class KenKen {
 			e.printStackTrace();
 		}
 
+		if (size_kk == 4) limit = 4294967296L;
+		if (size_kk == 5) limit = 152587890625L;
+		
 		// By now, I have read the input and saved the conditions.
-		for ( long j = 0; j < 4294967296L; j++)   //4^16 combinations. can be 5^16 as well;
+		for ( long j = 0; j < limit; j++)   //4^16 combinations. can be 5^16 as well; size_kk^16;
 		{
 			//convert j to base 4/5
 			//check condition
 			// end if true
-
+			
+			// does'nt work - we need to replace selective values 
+			String str_long = Long.toString(j,size_kk);
+			str_long = String.format("%16s", str_long).replace(' ', '0');
+			str_long = str_long.replace("4","5");
+			str_long = str_long.replace("3","4");
+			str_long = str_long.replace("2","3");
+			str_long = str_long.replace("1","2");
+			str_long = str_long.replace("0","1");
+			//System.out.println(str_long); // converts to base 4 but 0,1,2,3 need to add 1
 		}
 
 		// Write the required details in the output file
