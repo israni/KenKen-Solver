@@ -46,7 +46,7 @@ public class KenKen {
 				String[] x_y = words[i].split(",",2);
 				int x = Integer.valueOf(x_y[0]);
 				int y = Integer.valueOf(x_y[1]);
-				int index = x + size_kk*(y-1) - 1;
+				int index = y + size_kk*(x-1) - 1;
 				//System.out.println(index);
 				indices.add(i-2,index);
 			}

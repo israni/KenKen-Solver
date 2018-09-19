@@ -1,0 +1,37 @@
+Puzzle 1:
+Approach 2:
+2	1	4	3	5	
+3	2	5	1	4	
+5	4	3	2	1	
+4	3	1	5	2	
+1	5	2	4	3	
+States Generated: 15300
+Time in microseconds: 1050802.0
+States/microseconds: 0.014560307
+Approach 3:
+2	1	4	3	5	
+3	2	5	1	4	
+5	4	3	2	1	
+4	3	1	5	2	
+1	5	2	4	3	
+States Generated: 5161
+Time in microseconds: 304946.0
+States/microseconds: 0.016924309
+Approach 4:
+2	1	4	3	5	
+3	2	5	1	4	
+5	4	3	2	1	
+4	3	1	5	2	
+1	5	2	4	3	
+States Generated: 2750
+Time in microseconds: 207736.0
+States/microseconds: 0.013237956
+Approach 5:
+2	1	4	3	5	
+3	2	5	1	4	
+5	4	3	2	1	
+4	3	1	5	2	
+1	5	2	4	3	
+States Generated: 1378
+Time in microseconds: 381439.0
+States/microseconds: 0.0036126354
