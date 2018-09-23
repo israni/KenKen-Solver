@@ -80,7 +80,7 @@ public class Kenken_try {
 	}
 
 	private static void print_solution(int[] solution)
-	{
+	{	
 		int temp = 1;
 		if (solution.length == 16) temp = 4;
 		if (solution.length == 25) temp = 5;
@@ -224,7 +224,6 @@ public class Kenken_try {
 		boolean solved = check_conditions(conditions, solution);
 		//System.out.println("solved? " + solved);
 		if (solved) print_solution(solution);
-
 	}
 
 	private static void solve_using_approach_3(HashMap puzzle)
@@ -255,7 +254,6 @@ public class Kenken_try {
 		boolean solved = check_conditions(conditions, solution);
 		//System.out.println("solved? " + solved);
 		if (solved) print_solution(solution);
-
 	}
 
 	private static void solve_using_approach_5(HashMap puzzle)

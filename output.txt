@@ -1,0 +1,119 @@
+File reading complete!
+Puzzle 1:
+Approach 1:
+Solution:
+3	2	4	1
+4	3	1	2
+2	1	3	4
+1	4	2	3
+States generated: 0
+Time in microseconds: 99
+States/microseconds: 0
+Approach 2:
+Solution:
+3	2	4	1
+4	3	1	2
+2	1	3	4
+1	4	2	3
+Approach 3:
+Solution:
+3	2	4	1
+4	3	1	2
+2	1	3	4
+1	4	2	3
+Approach 4:
+Solution:
+3	2	4	1
+4	3	1	2
+2	1	3	4
+1	4	2	3
+Approach 5:
+Solution:
+3	2	4	1
+4	3	1	2
+2	1	3	4
+1	4	2	3
+
+Puzzle 2:
+Approach 1:
+Subtract failed
+Approach 2:
+Subtract failed
+Approach 3:
+Subtract failed
+Approach 4:
+Subtract failed
+Approach 5:
+Subtract failed
+
+Puzzle 3:
+Approach 1:
+Add failed
+Approach 2:
+Add failed
+Approach 3:
+Add failed
+Approach 4:
+Add failed
+Approach 5:
+Add failed
+
+Puzzle 4:
+Approach 1:
+Add failed
+Approach 2:
+Add failed
+Approach 3:
+Add failed
+Approach 4:
+Add failed
+Approach 5:
+Add failed
+
+Puzzle 5:
+Approach 1:
+Subtract failed
+Approach 2:
+Subtract failed
+Approach 3:
+Subtract failed
+Approach 4:
+Subtract failed
+Approach 5:
+Subtract failed
+
+Puzzle 6:
+Approach 1:
+Approach 2:
+Approach 3:
+Approach 4:
+Approach 5:
+
+Puzzle 7:
+Approach 1:
+Approach 2:
+Approach 3:
+Approach 4:
+Approach 5:
+
+Puzzle 8:
+Approach 1:
+Approach 2:
+Approach 3:
+Approach 4:
+Approach 5:
+
+Puzzle 9:
+Approach 1:
+Approach 2:
+Approach 3:
+Approach 4:
+Approach 5:
+
+Puzzle 10:
+Approach 1:
+Approach 2:
+Approach 3:
+Approach 4:
+Approach 5:
+
