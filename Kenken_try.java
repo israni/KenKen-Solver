@@ -3,6 +3,10 @@ import java.util.*;
 
 public class Kenken_try {
 
+	static int size_kk = 0;
+	static List<Integer> group_id = new ArrayList<Integer>(Collections.nCopies(16, 0));
+	static long limit;
+
     // ********************************************************** //
 	// readfile - reads input.txt.
 	// Creates a data structure called "problems".
@@ -11,12 +15,8 @@ public class Kenken_try {
 	// ********************************************************** //
 
 	static List<HashMap> problems = new ArrayList<HashMap>();    
-	static int size_kk = 0;
-	static List<Integer> group_id = new ArrayList<Integer>(Collections.nCopies(16, 0));
-	static long limit;
-
     private static void readFile(File fin) throws IOException 
-    {
+    {	
 		FileInputStream fis = new FileInputStream(fin);
 	 	BufferedReader br = new BufferedReader(new InputStreamReader(fis));
 	 	int line_number = 1;
@@ -79,50 +79,53 @@ public class Kenken_try {
 		System.out.println("File reading complete!");
 	}
 
-	private static boolean check_row_constraints(int[] solution)
+	private static void print_solution(int[] solution)
 	{
-		boolean row_cons = true;
 		int temp = 1;
-
 		if (solution.length == 16) temp = 4;
 		if (solution.length == 25) temp = 5;
-		
+		System.out.println("Solution:");
 		for (int i=1; i<=temp; i++)
-		{
-			HashSet set = new HashSet();
-			for ( int j=1; j<=temp; j++)
-			{
-				row_cons = set.add(solution[j+4*(i-1)-1]);
-				if (!row_cons) {System.out.println("row " +i+ " conditon failed!");return false;} 
+		{	for ( int j=1; j<=temp; j++)
+			{	
+				System.out.print(solution[j+temp*(i-1)-1]);
+				if (j!=temp) System.out.print("\t");
 			}
+			System.out.print("\n");	
 		}
+	}
 
+	private static boolean check_row_constraints(int[] solution)
+	{	
+		boolean row_cons = true;
+		int temp = 1;
+		if (solution.length == 16) temp = 4;
+		if (solution.length == 25) temp = 5;
+		for (int i=1; i<=temp; i++)
+		{	HashSet set = new HashSet();
+			for ( int j=1; j<=temp; j++)
+			{	row_cons = set.add(solution[j+temp*(i-1)-1]);
+				if (!row_cons) {System.out.println("row " +i+ " conditon failed!");return false;} }	}
 		return true;
 	}
 
 	private static boolean check_col_constraints(int[] solution)
-	{
+	{	
 		boolean col_cons = true;
 		int temp = 1;
-
 		if (solution.length == 16) temp = 4;
 		if (solution.length == 25) temp = 5;
-
 		for (int i=1; i<=temp; i++)
-		{
-			HashSet set = new HashSet();
+		{	HashSet set = new HashSet();
 			for ( int j=1; j<=temp; j++)
-			{
-				col_cons = set.add(solution[i+4*(j-1)-1]); 
-				if (!col_cons) {System.out.println("col " +i+ " conditon failed!");return false;} 
-			}
-		}
-
+			{	col_cons = set.add(solution[i+temp*(j-1)-1]); 
+				if (!col_cons) {System.out.println("col " +i+ " conditon failed!");return false;} }}
 		return true;
 	}
 
 	private static boolean check_conditions(HashMap conditions, int[] solution)
-	{	boolean result_check = true;
+	{	
+		boolean result_check = true;
 		result_check = result_check && check_row_constraints(solution);
 		result_check = result_check && check_col_constraints(solution);
 
@@ -161,20 +164,31 @@ public class Kenken_try {
 		return result_check;
 	}
 
-
-
 	private static void solve_using_approach_1(HashMap puzzle)
 	{
 		List group_id = (ArrayList) puzzle.get("group_id");
 		int n = (Integer) puzzle.get("N"); 
 		HashMap conditions = (HashMap) puzzle.get("conditions");
 		int solution[];
+		int states_gen = 0;
+	
+		long start = System.nanoTime();
+		// do stuff
 
-		if (n == 4) solution = new int[] {3,2,4,1, 4,3,1,2, 2,1,3,4, 1,4,2,3};
-		else if (n == 5) solution = new int[] {1,2,3,4,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
-		else return;
-		boolean solved = check_conditions(conditions, solution);
-		System.out.println("solved? " + solved);
+			if (n == 4) solution = new int[] {3,2,4,1, 4,3,1,2, 2,1,3,4, 1,4,2,3};
+			else return;
+			boolean solved = check_conditions(conditions, solution);
+			
+		long end = System.nanoTime();
+		long microseconds = (end - start) / 1000;
+
+		if (solved) {
+			print_solution(solution); 
+			System.out.println("States generated: "+ states_gen); 
+			System.out.println("Time in microseconds: " + microseconds); 
+			System.out.println("States/microseconds: " + states_gen/microseconds); }
+
+
 		// if (size_kk == 4) limit = 4294967296L;
 		// if (size_kk == 5) limit = 152587890625L;
 		
@@ -194,9 +208,69 @@ public class Kenken_try {
 		// 	str_long = str_long.replace("2","3");
 		// 	str_long = str_long.replace("1","2");
 		// 	str_long = str_long.replace("0","1");
-		// 	//System.out.println(str_long); // converts to base 4 but 0,1,2,3 need to add 1
-			
-		
+		// 	//System.out.println(str_long); // converts to base 4 but 0,1,2,3 need to add 1				
+	}
+
+	private static void solve_using_approach_2(HashMap puzzle)
+	{
+		List group_id = (ArrayList) puzzle.get("group_id");
+		int n = (Integer) puzzle.get("N"); 
+		HashMap conditions = (HashMap) puzzle.get("conditions");
+		int solution[];
+
+		if (n == 4) solution = new int[] {3,2,4,1, 4,3,1,2, 2,1,3,4, 1,4,2,3};
+		//else if (n == 5) solution = new int[] {1,2,3,4,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+		else return;
+		boolean solved = check_conditions(conditions, solution);
+		//System.out.println("solved? " + solved);
+		if (solved) print_solution(solution);
+
+	}
+
+	private static void solve_using_approach_3(HashMap puzzle)
+	{
+		List group_id = (ArrayList) puzzle.get("group_id");
+		int n = (Integer) puzzle.get("N"); 
+		HashMap conditions = (HashMap) puzzle.get("conditions");
+		int solution[];
+
+		if (n == 4) solution = new int[] {3,2,4,1, 4,3,1,2, 2,1,3,4, 1,4,2,3};
+		//else if (n == 5) solution = new int[] {1,2,3,4,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+		else return;
+		boolean solved = check_conditions(conditions, solution);
+		//System.out.println("solved? " + solved);
+		if (solved) print_solution(solution);
+	}
+
+	private static void solve_using_approach_4(HashMap puzzle)
+	{
+		List group_id = (ArrayList) puzzle.get("group_id");
+		int n = (Integer) puzzle.get("N"); 
+		HashMap conditions = (HashMap) puzzle.get("conditions");
+		int solution[];
+
+		if (n == 4) solution = new int[] {3,2,4,1, 4,3,1,2, 2,1,3,4, 1,4,2,3};
+		//else if (n == 5) solution = new int[] {1,2,3,4,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+		else return;
+		boolean solved = check_conditions(conditions, solution);
+		//System.out.println("solved? " + solved);
+		if (solved) print_solution(solution);
+
+	}
+
+	private static void solve_using_approach_5(HashMap puzzle)
+	{
+		List group_id = (ArrayList) puzzle.get("group_id");
+		int n = (Integer) puzzle.get("N"); 
+		HashMap conditions = (HashMap) puzzle.get("conditions");
+		int solution[];
+
+		if (n == 4) solution = new int[] {3,2,4,1, 4,3,1,2, 2,1,3,4, 1,4,2,3};
+		//else if (n == 5) solution = new int[] {1,2,3,4,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+		else return;
+		boolean solved = check_conditions(conditions, solution);
+		//System.out.println("solved? " + solved);
+		if (solved) print_solution(solution);
 	}
 
 
@@ -205,9 +279,8 @@ public class Kenken_try {
     // ********************************************************** //
 
     public static void main(String[] args) 
-    {
-		
-		// Read file
+    {	
+    	// Read file
 		File dir = new File(".");
 		try{
 			File fin = new File(dir.getCanonicalPath()+File.separator +"input.txt");
@@ -216,31 +289,25 @@ public class Kenken_try {
 			e.printStackTrace();
 		}
 
-		//System.out.println(problems.size());
-		
 		// For each problem in problems,
 		// Solve using approach 1,2,3,4,5
 
 		for(int puzzle_num = 0; puzzle_num < problems.size(); puzzle_num++)
 		{
-			//System.out.println("\n"+(puzzle_num+1));
 			HashMap puzzle = problems.get(puzzle_num);
 			
-			// get required data from puzzle! Could be done in each approach
-			// List group_id = (ArrayList) puzzle.get("group_id");
-			int n = (Integer) puzzle.get("N"); 
-			// HashMap conditions = (HashMap) puzzle.get("conditions");
-
-			if (n==4)
-				{System.out.println("Solving puzzle number "+(puzzle_num+1)+" using approach 1:");
-				solve_using_approach_1(puzzle);}
-			//solve_using_approach_2(puzzle);
-			//solve_using_approach_3(puzzle);
-			//solve_using_approach_4(puzzle);
-			//solve_using_approach_5(puzzle);
-			
-
-		}
-
+			System.out.println("Puzzle "+(puzzle_num+1)+":");
+			System.out.println("Approach 1:");
+				solve_using_approach_1(puzzle);
+			System.out.println("Approach 2:");
+				solve_using_approach_2(puzzle);
+			System.out.println("Approach 3:");
+				solve_using_approach_3(puzzle);
+			System.out.println("Approach 4:");
+				solve_using_approach_4(puzzle);
+			System.out.println("Approach 5:");
+				solve_using_approach_5(puzzle);
+			System.out.println();
+    	}
     }
 }
