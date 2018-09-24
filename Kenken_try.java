@@ -309,12 +309,10 @@ public class Kenken_try {
 			boolean solved = false;
 			boolean backtrack = false;
 
-			//convert group_id to group- hashmap,
 			HashMap groups = new HashMap<>();
 			for (int i = 1; i <= conditions.size(); i++)
 			{ 
 				List indices = new ArrayList<>();
-				//System.out.print(group_id.get(i) + " ");
 				for (int j=0; j < group_id.size(); j++)
 					if((Integer)group_id.get(j) == i) indices.add(j);
 				groups.put(i,indices);
@@ -326,38 +324,43 @@ public class Kenken_try {
 			while(!solved && current_index<=15)
 			{
 				
-				System.out.println("current index: "+current_index);
-				print_solution(solution);
-
+				//System.out.println("current index: "+ current_index);
+				//System.out.println("Backtracking: " + backtrack);
 				if(solution[current_index]!=n)
 					{solution[current_index]++; backtrack = false;}
 
-				else if (solution[current_index] == n) {System.out.println("solution[current_index] =  n"); solution[current_index]=0; current_index--;}				
+				else {System.out.println("solution[current_index] =  n"); solution[current_index]=0; current_index--;}				
 				
-				// System.out.println("Row being checked " + (Integer) ((current_index)/n +1));
 				boolean check_row = check_single_row_constraints(solution, (Integer) ((current_index)/n +1));
-				// System.out.println("row " + check_row);
-
-				// System.out.println("Col being checked " + (Integer) ((current_index)%n+1));
 				boolean check_col = check_single_col_constraints(solution, (Integer) ((current_index)%n+1));
-				// System.out.println("col " + check_col);
-				
-				boolean check;
 
-				if (check_row && check_col && is_group_complete(solution,(ArrayList) groups.get((Integer)group_id.get(current_index))))
-				{	boolean check_group = check_group_constraint(conditions,solution,(Integer)group_id.get(current_index));
-					System.out.println("Group being checked " + (Integer)group_id.get(current_index));
-					System.out.println("group " + check_group);
-					check = check_row && check_col && check_group;
-					if(!check_group) {solution[current_index] = 0; System.out.println("current index: "+current_index); backtrack = true; current_index--; System.out.println("current index: "+current_index);}
+				boolean check = check_row && check_col;
+
+				if(check)
+				{	
+					for (int k=0; k<= current_index; k++)
+					{
+						if (is_group_complete(solution,(ArrayList) groups.get((Integer)group_id.get(k))))
+						{	
+							boolean check_group = check_group_constraint(conditions,solution,(Integer)group_id.get(k));
+							System.out.println("Group being checked " + (Integer)group_id.get(k));
+							System.out.println("group " + check_group);
+							if(!check_group && solution[current_index]==n) 
+							{
+								solution[current_index] = 0; backtrack = true; current_index--; 
+							}
+							check = check_row && check_col && check_group;
+						}
+					}
 				}
 
 				else
-				{	
-					check = check_row && check_col;
+				{
+					backtrack = true;
 				}
+				//System.out.println(check);
 
-				System.out.println(check);
+				print_solution(solution);
 				if (check && !backtrack) 
 					{
 					//	print_solution(solution);
@@ -365,7 +368,7 @@ public class Kenken_try {
 					}
 
 
-				
+				solved = check_conditions(conditions,solution);
 			}
 
 			
