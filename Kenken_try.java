@@ -190,6 +190,38 @@ public class Kenken_try {
 		return result_check;
 	}
 
+	private static boolean check_single_row_constraints(int[] solution, int row_num)
+	{	
+		boolean row_cons = true;
+		int temp = 1;
+		for(int i = 1; i<=row_num; i++)
+		{	HashSet set = new HashSet();
+			if (solution.length == 16) temp = 4;
+			if (solution.length == 25) temp = 5;
+			for ( int j=1; j<=temp; j++)
+			{	if(solution[j+temp*(i-1)-1]!=0)
+					row_cons = set.add(solution[j+temp*(i-1)-1]);
+				if (!row_cons) {
+					return false;} } }
+		return true;
+	}
+
+	private static boolean check_single_col_constraints(int[] solution, int col_num)
+	{	
+		boolean col_cons = true;
+		int temp = 1;
+		for(int i = 1; i<=col_num; i++)
+			{HashSet set = new HashSet();
+			if (solution.length == 16) temp = 4;
+			if (solution.length == 25) temp = 5;
+			for ( int j=1; j<=temp; j++)
+			{	if(solution[i+temp*(j-1)-1]!=0)
+					col_cons = set.add(solution[i+temp*(j-1)-1]);
+				if (!col_cons) {
+					return false;} } }
+		return true;
+	}
+
 	private static void solve_using_approach_1(HashMap puzzle)
 	{	
 		List group_id = (ArrayList) puzzle.get("group_id");
@@ -234,6 +266,18 @@ public class Kenken_try {
 			System.out.println("States/microseconds: " + states_gen/microseconds); }
 	}
 
+	private static boolean is_group_complete(int[] solution, ArrayList indices)
+	{
+		//List indices = (ArrayList) indices;
+		boolean complete = true;
+		for (int i = 0; i< indices.size(); i++)
+		{	
+			if (solution[(Integer)indices.get(i)]!=0) complete = complete && true;
+			else return false;
+		}
+		return complete;
+	}
+
 	private static void solve_using_approach_2(HashMap puzzle)
 	{
 		List group_id = (ArrayList) puzzle.get("group_id");
@@ -241,6 +285,7 @@ public class Kenken_try {
 		HashMap conditions = (HashMap) puzzle.get("conditions");
 		int solution[];
 		int states_gen = 0;
+		System.out.println(conditions);
 	
 		long start = System.nanoTime();
 		// do stuff
@@ -262,33 +307,65 @@ public class Kenken_try {
 			int current_index = 0;
 			int conditions_checked = 0;
 			boolean solved = false;
-			
+			boolean backtrack = false;
+
 			//convert group_id to group- hashmap,
-			// HashMap groups = new HashMap<>();
-			// for (int i = 1; i <= conditions.size(); i++)
-			// { 
-			// 	List indices = new ArrayList<>();
-			// 	//System.out.print(group_id.get(i) + " ");
-			// 	for (int j=0; j < group_id.size(); j++)
-			// 		if((Integer)group_id.get(j) == i) indices.add(j);
-			// 	groups.put(i,indices);
-			// }
+			HashMap groups = new HashMap<>();
+			for (int i = 1; i <= conditions.size(); i++)
+			{ 
+				List indices = new ArrayList<>();
+				//System.out.print(group_id.get(i) + " ");
+				for (int j=0; j < group_id.size(); j++)
+					if((Integer)group_id.get(j) == i) indices.add(j);
+				groups.put(i,indices);
+			}
 
-			// System.out.println();
-			// System.out.println(groups);
+			System.out.println();
+			System.out.println(groups);
 
-			while(!solved)
+			while(!solved && current_index<=15)
 			{
-				solution[current_index]++;
-				boolean check = check_row_constraints(solution);
-				check = check && check_col_constraints(solution);
 				
+				System.out.println("current index: "+current_index);
+				print_solution(solution);
 
-				for(int i=1; i<=conditions.size(); i++)
-					// add condition for this group
-					check = check && check_group_constraint(conditions,solution,i);
+				if(solution[current_index]!=n)
+					{solution[current_index]++; backtrack = false;}
+
+				else if (solution[current_index] == n) {System.out.println("solution[current_index] =  n"); solution[current_index]=0; current_index--;}				
+				
+				// System.out.println("Row being checked " + (Integer) ((current_index)/n +1));
+				boolean check_row = check_single_row_constraints(solution, (Integer) ((current_index)/n +1));
+				// System.out.println("row " + check_row);
+
+				// System.out.println("Col being checked " + (Integer) ((current_index)%n+1));
+				boolean check_col = check_single_col_constraints(solution, (Integer) ((current_index)%n+1));
+				// System.out.println("col " + check_col);
+				
+				boolean check;
+
+				if (check_row && check_col && is_group_complete(solution,(ArrayList) groups.get((Integer)group_id.get(current_index))))
+				{	boolean check_group = check_group_constraint(conditions,solution,(Integer)group_id.get(current_index));
+					System.out.println("Group being checked " + (Integer)group_id.get(current_index));
+					System.out.println("group " + check_group);
+					check = check_row && check_col && check_group;
+					if(!check_group) {solution[current_index] = 0; System.out.println("current index: "+current_index); backtrack = true; current_index--; System.out.println("current index: "+current_index);}
+				}
+
+				else
+				{	
+					check = check_row && check_col;
+				}
+
 				System.out.println(check);
-				current_index++;	
+				if (check && !backtrack) 
+					{
+					//	print_solution(solution);
+						current_index++;
+					}
+
+
+				
 			}
 
 			
