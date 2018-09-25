@@ -289,7 +289,6 @@ public class Kenken_try {
 		HashMap conditions = (HashMap) puzzle.get("conditions");
 		int solution[];
 		int states_gen = 0;
-		//System.out.println(conditions);
 	
 		long start = System.nanoTime();
 		// do stuff
@@ -297,19 +296,7 @@ public class Kenken_try {
 			else if (n == 5) solution = new int[25];
 			else return;
 
-			//print group id
-			// for (int i=0; i<group_id.size();i++)
-			// 	{System.out.print(group_id.get(i)+ " ");}
-			// System.out.println();
-
-			// //print solution
-			// for (int i=0; i<solution.length;i++)
-			// 	{System.out.print(solution[i]+ " ");}
-			// System.out.println();
-
-			int backtrack_index = 0;
 			int current_index = 0;
-			int conditions_checked = 0;
 			boolean solved = false;
 			boolean backtrack = false;
 
@@ -322,20 +309,13 @@ public class Kenken_try {
 				groups.put(i,indices);
 			}
 
-			//System.out.println();
-			//System.out.println(groups);
-
 			while(!solved)
 			{
 				
-				//System.out.println("current index: "+ current_index);
-				//System.out.println("Backtracking: " + backtrack);
 				if(solution[current_index]!=n)
 					{solution[current_index]++; backtrack = false;}
 
-				else {
-					//System.out.println("solution[current_index] =  n"); 
-					solution[current_index]=0; current_index--;}				
+				else {solution[current_index]=0; current_index--;}				
 				
 				boolean check_row = check_single_row_constraints(solution, (Integer) ((current_index)/n +1));
 				boolean check_col = check_single_col_constraints(solution, (Integer) ((current_index)%n+1));
@@ -349,8 +329,6 @@ public class Kenken_try {
 						if (is_group_complete(solution,(ArrayList) groups.get((Integer)group_id.get(k))))
 						{	
 							boolean check_group = check_group_constraint(conditions,solution,(Integer)group_id.get(k));
-							//System.out.println("Group being checked " + (Integer)group_id.get(k));
-							//System.out.println("group " + check_group);
 							if(!check_group && solution[current_index]==n) 
 							{
 								solution[current_index] = 0; backtrack = true; current_index--; 
@@ -365,18 +343,11 @@ public class Kenken_try {
 				{
 					backtrack = true;
 				}
-				//System.out.println(check);
 
-				//print_solution(solution);
 				if (check && !backtrack) 
 					{
-					//	print_solution(solution);
 						current_index++;
 					}
-
-
-				
-				//if (solved) print_solution(solution);
 			}
 
 			
@@ -397,13 +368,100 @@ public class Kenken_try {
 		int n = (Integer) puzzle.get("N"); 
 		HashMap conditions = (HashMap) puzzle.get("conditions");
 		int solution[];
+		int states_gen = 0;
 
-		if (n == 4) solution = new int[] {3,2,4,1, 4,3,1,2, 2,1,3,4, 1,4,2,3};
-		else if (n == 5) solution = new int[] {1,2,3,4,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+		if (n == 4) solution = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+		else if (n == 5) solution = new int[25];
 		else return;
-		boolean solved = check_conditions(conditions, solution);
-		//System.out.println("solved? " + solved);
-//		if (solved) print_solution(solution);
+
+		// Create open lists
+		ArrayList<ArrayList<Integer>> open_lists = new ArrayList<ArrayList<Integer>>();
+		for (int i=0; i<solution.length; i++)
+		{
+			ArrayList<Integer> open_indices = new ArrayList<Integer>();
+			for (int j=1;j<=n;j++)
+				open_indices.add((Integer) j);
+			open_lists.add(open_indices);
+		}
+
+		System.out.println(open_lists);
+
+		long start = System.nanoTime();
+		// do stuff
+
+		int current_index = 0;
+		boolean solved = false;
+		boolean backtrack = false;
+
+		HashMap groups = new HashMap<>();
+		for (int i = 1; i <= conditions.size(); i++)
+		{ 
+			List indices = new ArrayList<>();
+			for (int j=0; j < group_id.size(); j++)
+				if((Integer)group_id.get(j) == i) indices.add(j);
+			groups.put(i,indices);
+		}
+
+		while(!solved)
+		{
+			System.out.println(current_index);
+			System.out.println("backtracking " + backtrack);
+
+			if(open_lists.get(current_index).size()!=0 && !backtrack)
+			{	solution[current_index]= open_lists.get(current_index).get(0);
+			
+				for (int i=current_index; i< solution.length; i++)
+				{
+				 	if( ((Integer) ((current_index)/n +1) == (Integer) ((i)/n + 1) || (Integer) ((current_index)%n+1) == (Integer) ((i%n)+1)) && open_lists.get(i).size()!=0)
+				 		open_lists.get(i).remove((Integer) solution[current_index] ); 
+				}
+				backtrack = false;
+			}
+				
+			else if(open_lists.get(current_index).size()!=0 && backtrack)
+			{	
+				for (int i=current_index; i< solution.length; i++)
+				{
+				 	if( ((Integer) ((current_index)/n +1) == (Integer) ((i)/n + 1) || (Integer) ((current_index)%n+1) == (Integer) ((i%n)+1)) && open_lists.get(i).size()!=0)
+				 		open_lists.get(i).remove((Integer) solution[current_index] ); 
+				}
+
+				solution[current_index]= open_lists.get(current_index).get(0);
+				
+				backtrack = false;
+			}
+
+			else 
+				{
+					open_lists.get(current_index).add((Integer) solution[current_index]);
+					for (int i=current_index+1; i< solution.length; i++)
+					{
+				 		if( ((Integer) ((current_index)/n +1) == (Integer) ((i)/n + 1) || (Integer) ((current_index)%n+1) == (Integer) ((i%n)+1)))
+				 			open_lists.get(i).add((Integer) solution[current_index] ); 
+					}
+					solution[current_index] = 0; 
+					current_index--;
+					backtrack = true;
+				}				
+			
+			System.out.println(open_lists);
+			print_solution(solution);
+				
+	 		boolean check_row = check_single_row_constraints(solution, (Integer) ((current_index)/n+1));
+	 		boolean check_col = check_single_col_constraints(solution, (Integer) ((current_index)%n+1));
+	 		boolean check = check_row && check_col;
+	 		System.out.println(check)
+
+				
+		long end = System.nanoTime();
+		long microseconds = (end - start) / 1000;
+
+		if (solved) {
+			print_solution(solution); 
+			System.out.println("States generated: "+ states_gen); 
+			System.out.println("Time in microseconds: " + microseconds); 
+			System.out.println("States/microseconds: " + states_gen/microseconds); }
+
 	}
 
 	private static void solve_using_approach_4(HashMap puzzle)
@@ -460,7 +518,7 @@ public class Kenken_try {
 			System.out.println("Approach 1:");
 				//solve_using_approach_1(puzzle);
 			System.out.println("Approach 2:");
-				solve_using_approach_2(puzzle);
+				//solve_using_approach_2(puzzle);
 			System.out.println("Approach 3:");
 				solve_using_approach_3(puzzle);
 			System.out.println("Approach 4:");
